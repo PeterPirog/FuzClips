@@ -1,6 +1,7 @@
 import subprocess
 import re
 
+
 def extract_facts(result):
     facts_pattern = re.compile(r'f-\d+\s*\((.+?)\)')
     facts = facts_pattern.findall(result)
@@ -16,13 +17,19 @@ class CLIPSInterface:
 
     def run(self, input_data):
         command = [self.executable_path]
-        process = subprocess.Popen(command, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True, text=True)
+        process = subprocess.Popen(command, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+                                   shell=True, text=True)
         stdout, stderr = process.communicate(input=input_data)
+
+        # Usuwanie niepotrzebnych linii z "CLIPS>"
+        stdout = re.sub(r'CLIPS>\s*', '', stdout)
 
         return stdout
 
+
 # Tworzenie interfejsu CLIPS
-clips = CLIPSInterface(r"C:\Program Files\CLIPS 6.4\CLIPSDOS.exe")  # Dodaj 'r' przed ścieżką, aby uniknąć problemów z ukośnikami
+clips = CLIPSInterface(
+    r"C:\Program Files\CLIPS 6.4\CLIPSDOS.exe")  # Dodaj 'r' przed ścieżką, aby uniknąć problemów z ukośnikami
 
 # Przykładowe dane wejściowe
 input_data = '''
